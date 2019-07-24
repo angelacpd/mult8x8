@@ -24,6 +24,7 @@ timing
 *_inst.vhd
 *.bak
 *.cmp
+*.ddb
 *.done
 *.eqn
 *.hex
@@ -36,6 +37,7 @@ timing
 *.ptf.*
 *.qar
 *.qarlog
+*.qdf
 *.qws
 *.rpt
 *.smsg
