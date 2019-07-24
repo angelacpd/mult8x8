@@ -13,7 +13,7 @@ END ENTITY input_reg;
 ARCHITECTURE arch_input_reg OF input_reg IS
 BEGIN
 	
-	PROCESS(clk)
+	PROCESS(clk, reset, get_data_a, get_data_b)
 	BEGIN
 		IF reset = '1' then
             dataa <= x"00";

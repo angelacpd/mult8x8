@@ -180,7 +180,7 @@ BEGIN
 							datab => product8x8, 
 							sum => sum);
 
-	u9: seven_segment_cntrl PORT MAP(input => state_out, 
+	u9: seven_segment_cntrl PORT MAP(input => product8x8, 
 												disp0 => HEX0, 
 												disp1 => HEX1, 
 												disp2 => HEX2, 
