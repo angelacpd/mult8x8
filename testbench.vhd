@@ -24,8 +24,9 @@ component mult8x8 is
 			);
 end component mult8x8;
 	
-	signal clock_in : std_logic := '0';
-	signal reset : std_logic := '0';
+	signal clock_in: std_logic := '0';
+	signal reset, start : std_logic := '1';
+	-- signal reset : std_logic := '0';
 	
 	signal KEY_in : std_logic_vector(3 downto 0);
 	signal SW_in : std_logic_vector(9 downto 0);
@@ -49,11 +50,12 @@ begin
 
 	end process;
 	
-	reset <= '1', '0' after 5 ns;
-	KEY(0) <= reset;
-	KEY(1) <= '0';
-	KEY(2) <= '0';
-	KEY(3) <= '0';
+	reset <= '0', '1' after 5 ns;
+	KEY_in(0) <= start;
+	KEY_in(1) <= reset;
+	KEY_in(2) <= get_data_a;
+	KEY_in(3) <= get_data_b;
+	SW_in <= start & reset & sw_input;
 
 
 	process
@@ -61,25 +63,28 @@ begin
 		sw_input <= "00000010";
 		wait for 25 ns;
         
-      get_data_a <= '1';
+      get_data_a <= '0';
       wait for 20 ns;
-		get_data_a <= '0';
+		get_data_a <= '1';
         
 		sw_input <= "00000100";
 		wait for 40 ns;
         
-      get_data_b <= '1';
-      wait for 20 ns;
       get_data_b <= '0';
-
+      wait for 20 ns;
+      get_data_b <= '1';
+		wait for 20 ns;
+		
+		start <= '0';
+		wait for 200 ns;
 	
 	   ASSERT false REPORT "Finished" SEVERITY failure;
     
 	end process;
 
-   RISC : riscv port map(	CLOCK_50 => clock_in, 
-									KEY => KEY,
-									SW => SW,
+   DUT : mult8x8 port map(	CLOCK_50 => clock_in, 
+									KEY => KEY_in,
+									SW => SW_in,
 									LEDR => LEDR_out,
 									HEX0 => HEX0_out,
 									HEX1 => HEX1_out,

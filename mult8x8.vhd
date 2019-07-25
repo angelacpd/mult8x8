@@ -109,6 +109,9 @@ ARCHITECTURE arch_mult8x8 OF mult8x8 IS
 	SIGNAL sw_input, dataa, datab : std_logic_vector(7 DOWNTO 0);
 	SIGNAL reset_a, start : std_logic;
 	
+	SIGNAL get_data_a : std_logic;
+	SIGNAL get_data_b : std_logic;
+	
 	SIGNAL aout, bout : std_logic_vector(3 DOWNTO 0);
 	SIGNAL partial_product : std_logic_vector(7 DOWNTO 0);
 	
@@ -123,16 +126,29 @@ ARCHITECTURE arch_mult8x8 OF mult8x8 IS
 
 BEGIN
 	sw_input <= SW(7 DOWNTO 0);
-	reset_a <= SW(8);
-	start <= SW(9);
+	reset_a <= not(KEY(1));
+	start <= not(KEY(0));
 	-- Start SIGNAL requires inversion before connecting to counter
 	start_n <= not(start);
+	get_data_a <= not(KEY(2));
+	get_data_b <= not(KEY(3));
+
+	--done_flag_o <= done_flag;
+	LEDR(0) <= done_flag;
+	--LEDR(0) <= done_flag_o;
+	LEDR(2)<= start;
+	--reset_a <= not(KEY(1));
+	--add_datab <= not(KEY(2));
 	
+	--dataa <= SW(7 downto 0);
+	--datab <= reg8_out;
+	--regis8_clr <= (done_flag or reset_a);
+		
 	
 	u0: input_reg PORT MAP( clk => CLOCK_50,
 									reset => reset_a,
-									get_data_a => KEY(2),
-									get_data_b => KEY(3),
+									get_data_a => get_data_a ,
+									get_data_b => get_data_b,
 									sw_input => sw_input, 
 									dataa => dataa, 
 									datab => datab );
@@ -187,6 +203,5 @@ BEGIN
 												disp3 => HEX3);
 	
 	
-	LEDR <= product8x8(9 DOWNTO 0);
 
 END ARCHITECTURE arch_mult8x8;
